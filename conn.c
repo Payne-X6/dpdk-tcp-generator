@@ -88,6 +88,7 @@ void tcp_open_pcap(unsigned portid, struct app_config *app_config) {
 void tcp_open_qname_table(unsigned portid, struct app_config *app_config) {
 
     uint16_t src_port = rte_rand();
+    uint16_t dst_port = DNS_PORT; //TODO load from args
     uint16_t src_ip_rand_octets;
 
     do {
@@ -130,7 +131,7 @@ void tcp_open_qname_table(unsigned portid, struct app_config *app_config) {
     // Initialize L4 header
     struct tcp_hdr *tcp = mbuf_tcp_ptr(syn_mbuf);
     tcp->src_port = rte_cpu_to_be_16(src_port);
-    tcp->dst_port = rte_cpu_to_be_16(DNS_PORT);
+    tcp->dst_port = rte_cpu_to_be_16(dst_port);
     tcp->sent_seq = 0;
     tcp->recv_ack = 0;
     tcp->data_off = 0x50; // 20 byte (5 * 4) header

@@ -125,6 +125,7 @@ struct cmdline_args {
     uint8_t src_ip_net[IPv4_ADDR_LEN];
     uint8_t dst_ip[IPv4_ADDR_LEN];
     uint32_t src_ip_client_mask;
+    uint16_t dst_port;
 
     uint32_t supplied_args;
 };

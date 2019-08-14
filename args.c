@@ -30,7 +30,8 @@ void tcpgen_usage(const char *prgname)
            "  --src-mac: Source MAC address of queries\n"
            "  --dst-mac: Destination MAC address of queries\n"
            "  --src-subnet: Source subnet of queries (for example 10.10.0.0/16)\n"
-           "  --dst-ip: Destination IP of queries\n",
+           "  --dst-ip: Destination IP of queries\n"
+           "  --dst-port: Destination PORT\n",
            prgname);
 }
 
@@ -60,6 +61,7 @@ static const char short_options[] =
 #define CMD_LINE_OPT_SRC_SUBNET "src-subnet"
 #define CMD_LINE_OPT_DST_IP "dst-ip"
 #define CMD_LINE_OPT_PCAP_FILE "pcap"
+#define CMD_LINE_OPT_DST_PORT "dst-port"
 
 enum {
     CMD_LINE_OPT_MIN_NUM = 256,
@@ -68,15 +70,17 @@ enum {
     CMD_LINE_OPT_SRC_SUBNET_NUM,
     CMD_LINE_OPT_DST_IP_NUM,
     CMD_LINE_OPT_PCAP_FILE_NUM,
+    CMD_LINE_OPT_DST_PORT_NUM
 };
 
 static const struct option long_options[] = {
-        {CMD_LINE_OPT_SRC_MAC,    required_argument, 0, CMD_LINE_OPT_SRC_MAC_NUM},
-        {CMD_LINE_OPT_DST_MAC,    required_argument, 0, CMD_LINE_OPT_DST_MAC_NUM},
-        {CMD_LINE_OPT_SRC_SUBNET, required_argument, 0, CMD_LINE_OPT_SRC_SUBNET_NUM},
-        {CMD_LINE_OPT_DST_IP,     required_argument, 0, CMD_LINE_OPT_DST_IP_NUM},
-        {CMD_LINE_OPT_PCAP_FILE,  required_argument, 0, CMD_LINE_OPT_PCAP_FILE_NUM},
-        {NULL, 0,                                    0, 0}
+        {CMD_LINE_OPT_SRC_MAC,    required_argument, 0,         CMD_LINE_OPT_SRC_MAC_NUM},
+        {CMD_LINE_OPT_DST_MAC,    required_argument, 0,         CMD_LINE_OPT_DST_MAC_NUM},
+        {CMD_LINE_OPT_SRC_SUBNET, required_argument, 0,         CMD_LINE_OPT_SRC_SUBNET_NUM},
+        {CMD_LINE_OPT_DST_IP,     required_argument, 0,         CMD_LINE_OPT_DST_IP_NUM},
+        {CMD_LINE_OPT_PCAP_FILE,  required_argument, 0,         CMD_LINE_OPT_PCAP_FILE_NUM},
+        {CMD_LINE_OPT_DST_PORT,   optional_argument, DNS_PORT,  CMD_LINE_OPT_DST_PORT_NUM},
+        {NULL,                    0,                 0,         0}
 };
 
 
@@ -185,6 +189,10 @@ int tcpgen_parse_args(int argc, char **argv, struct cmdline_args *args) {
             case CMD_LINE_OPT_PCAP_FILE_NUM:
                 args->pcap_file = optarg;
                 args->supplied_args |= ARG_PCAP_FILE;
+                break;
+
+            case CMD_LINE_OPT_DST_PORT_NUM:
+                args->dst_port = strtoul(optarg, NULL, 10) & 0xFFFF;
                 break;
 
             default:
